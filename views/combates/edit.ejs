@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Combat manager</title>
+    </head>
+    <body>
+        <div class="header">
+            <% include ../_includes/header %>
+        </div>
+        <script>
+            var monsters = <%- JSON.stringify(monsters) %>;
+            var data = <%- JSON.stringify(data) %>;
+        </script>
+        <% if (typeof expressFlash !== 'undefined') {  %>
+            <p>Message:
+                <%= expressFlash %>
+            </p>
+        <% } %>
+        <% include ../_includes/menus %>
+        <div class="content">
+            <div class="container-fluid">
+                <form name="combate" method="POST" action="../../editar/combate">
+                    <input type="hidden" name="_id" value="<%= data[0]._id %>">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm">
+                                <input type="text" class="form-control" name="nome" id="nome" placeholder="Nome do combate" value="<%= data[0].nome %>">
+                            </div>
+                            <div class="col-sm">
+                                <button type="submit" class="btn btn-primary" id="enviar">Enviar</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm">
+                            <select class="form-control" id="monsterList">
+                                <% for(var i=0; i < monsters.length; i++) {  %>
+                                    <option mid="<%= i %>" cr="<%= monsters[i].challenge_rating %>" value="<%= monsters[i].name %>">
+                                            <%= monsters[i].name %>
+                                    </option>
+                                <% } %>
+                            </select>
+                        </div>
+                        <div class="col-sm">
+                            <button class="btn btn-primary" id="monsterButton">Adicionar</button>
+                        </div>
+                        <div class="col-sm">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-sm combat">
+                            <table class="tabelaMonstros diplay" style="visibility: hidden;">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>CA</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                
+                                    <% let countHidden = 0; %>
+                                    <% for(var i=0; i < data[0].monstros.length; i++) { %>
+                                        <tr>
+                                            <td><%= monsters[data[0].monstros[i]].name %></td>
+                                            <td><%= monsters[data[0].monstros[i]].armor_class %></td>
+                                            <td>
+                                                <span class="btn btn-warning remover" row="<%= countHidden %>">Remove</span>
+                                            </td>
+                                        </tr>
+                                        
+                                        <script>
+                                            jQuery(document).ready(function($){
+                                                $('<input type="hidden" class="row_<%= countHidden %>" name="monstros" value="' + <%= data[0].monstros[i] %> + '">').appendTo("form");
+                                            })
+                                        </script>
+                                        <% countHidden++; %>
+                                    <% } %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <% include ../_includes/footer %>
+
+            <script>
+                var selectMonsters = document.getElementById('monsterList');
+                var countHidden = <%- countHidden %>;             
+
+                jQuery(document).ready(function($){
+                    var p = $('.tabelaMonstros').DataTable({
+                        "paging": false,
+                        "info": false,
+                        "searching": false,
+                        "fnInitComplete": function () {
+                            $('table').css('visibility', 'visible');
+                        }
+                    });
+
+                    $(document).on("change", "select", function () {
+                        $("option[value='" + this.value + "']", this)
+                            .attr("selected", true).siblings()
+                            .removeAttr("selected")
+                    });
+
+                    $('#monsterButton').on('click', function () {
+                        var monster = $('#monsterList option:selected');
+                        var name = monster.attr("value");
+                        var cr = monster.attr("cr");
+                        var mid = monster.attr("mid");
+
+                        if (name != 'none') {
+                            p.row.add([name, cr, '<span class="btn btn-warning remover" row="' + countHidden + '">Remove</span>']).draw(false);
+                            var hidden = $('<input type="hidden" class="row_' + countHidden + '" name="monstros" value="' + mid + '">');
+                            hidden.appendTo('form');
+                            countHidden++;
+                        }
+                    });
+
+                    $('.combat').on('click', '.remover', function () {
+                        var monster = $(this).parents('tr');
+                        var hidden = $(this).attr("row");
+                        $('.row_' + hidden).remove();
+                        p.row($(this).parents('tr')).remove().draw();
+                    });
+                })
+            </script>
+        </div>
+    </body>
+</html>

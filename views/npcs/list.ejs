@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Combat manager</title>
+
+
+</head>
+
+<body>
+    <div class="header">
+        <% include ../_includes/header %>
+    </div>
+
+            <% include ../_includes/menus %>
+                <div class="content">
+                    <div class="container-fluid">
+                        <div class="form-group">
+                            <h2 style="display: inline-block">NPCs</h2>
+                            <a class="btn btn-primary" href="/npcs/create" style="float: right">Adicionar NPC</a>
+                            <% if (success && success.length > 0) { %>
+                                <div class="alert alert-success"><%= success %></div>
+                            <% } %>
+                            <div class="row">
+                                <div class="col-sm combat">
+                                    <table class="tabelaMonstros diplay" style="visibility: hidden;">
+                                        <thead>
+                                            <tr>
+                                                <th>NPC</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% for(var i=0; i < data.length; i++) { %>
+                                                <tr>
+                                                    <td><%= data[i].nome %></td>
+                                                    <td>
+                                                        <a class="btn btn-primary" href="/npcs/edit/<%= data[i]._id %>" >Editar</a>
+                                                        <a class="btn btn-danger" href="/npcs/remove/<%= data[i]._id %>" >Remover</a>
+                                                    </td>
+                                                </tr>
+                                            <% } %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer">
+                    <% include ../_includes/footer %>
+                    <script>
+                        jQuery(document).ready(function($){
+                            var p = $('.tabelaMonstros').DataTable({
+                                "paging": false,
+                                "info": false,
+                                "searching": false,
+                                "fnInitComplete": function () {
+                                    $('table').css('visibility', 'visible');
+                                }
+                            });
+                        });
+                    </script>
+                </div>
+</body>
+
+</html>

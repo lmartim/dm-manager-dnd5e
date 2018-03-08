@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Combat manager</title>
+
+
+</head>
+
+<body>
+    <div class="header">
+        <% include ../_includes/header %>
+    </div>
+    <script>
+        var monsters = <%- JSON.stringify(monsters) %>;
+        var players = <%- JSON.stringify(players) %>;
+        var npcs = <%- JSON.stringify(npcs) %>;
+        var data = <%- JSON.stringify(data) %>;
+        // console.log(monsters);
+        // console.log(players);
+        console.log(npcs);
+        // console.log(data);
+    </script>
+
+            <% include ../_includes/menus %>
+            <% include ../_includes/helpers.ejs %>
+                <div class="content">
+                    <div class="container-fluid">
+                        <div class="form-group">
+                            <div>
+                                <h2 style="display: inline-block">Combates</h2>
+                            </div>
+                            <% if (typeof message !== 'undefined') { %>
+                                <div class="alert alert-danger"><%= message %></div>
+                            <% } %>
+                            
+                            <!-- <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="monsterList">Lista de Monstros</label>
+                                        <select class="form-control" id="monsterList">
+                                            <% for(var i=0; i < data.length; i++) {  %>
+                                                <option mid="<%= i %>" cr="<%= data[i].challenge_rating %>" value="<%= data[i].name %>">
+                                                        <%= data[i].name %>
+                                                </option>
+                                            <% } %>
+                                        </select>
+                                    </div>
+                                    <div class="btn btn-success addMonster">Adicionar Monstro</div>
+                                </div>
+                            </div> -->
+                            <br>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="playerList">Lista de Players</label>
+                                        <select class="form-control" id="playerList" name="playerList">
+                                            <option value="none">Selecione um Player</option>
+                                            <% for(var i=0; i < players.length; i++) {  %>
+                                                <option value="<%= players[i].personagem %>" hp="<%= players[i].hp %>" ca="<%= players[i].ca %>" des="<%= players[i].des %>">
+                                                        <%= players[i].personagem %> (<%= players[i].jogador %>)
+                                                </option>
+                                            <% } %>
+                                        </select>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="hp">HP</label>
+                                                <input type="text" class="hp hpPj form-control" id="hp" name="hp" placeholder="0">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="ca">CA</label>
+                                                <input type="text" class="ca caPj form-control" name="ca" id="ca" placeholder="0">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="des">Mod. Des</label>
+                                                <input type="text" class="des desPj form-control" id="des" name="des" placeholder="0">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="btn btn-success addPlayer">Adicionar Player</div>
+                                </div>
+
+                                <!-- COISAS DOS NPCS -->
+                                <div class="col-sm">
+                                    <div class="form-group">
+                                        <label for="npcList">Lista de NPCs</label>
+                                        <select class="form-control" class="npcList" id="npcList" name="npcList">
+                                            <option value="none">Selecione um NPC</option>
+                                            <% for(var i=0; i < npcs.length; i++) {  %>
+                                                <option value="<%= npcs[i].nome %>" ca="<%= npcs[i].ca %>" hp="<%= npcs[i].hp %>" des="<%= npcs[i].des %>" informacoes="<%= npcs[i].informacoes %>">
+                                                        <%= npcs[i].nome %> - HP: <%= npcs[i].hp %> - CA: <%= npcs[i].ca %>
+                                                </option>
+                                            <% } %>
+                                        </select>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="hp">HP</label>
+                                                <input type="text" class="hp hpNpc form-control" id="hp" name="hp" placeholder="0">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="ca">CA</label>
+                                                <input type="text" class="ca caNpc form-control" name="ca" id="ca" placeholder="0">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="des">Mod. Des</label>
+                                                <input type="text" class="des desNpc form-control" id="des" name="des" placeholder="0">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="btn btn-success addNpc">Adicionar NPC</div>
+                                </div>
+                                <!-- COISAS DOS NPCS -->
+
+                                <div class="col-sm-12 combat">
+                                    <table class="tabelaMonstros diplay table-striped" style="visibility: hidden;">
+                                       <thead>
+                                            <tr>
+                                                <th>Nome</th>
+                                                <th>Inic.</th>
+                                                <th>CA</th>
+                                                <th>HP</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% let countHidden = 0 %>
+                                            <% for(var i=0; i < monsters[0].monstros.length; i++) { %>
+                                                <% var monsterData = data[monsters[0].monstros[i]]; %>
+                                                <tr class="monster-<%= countHidden %>">
+                                                    <td data-toggle="modal" data-target=".monsterModal-<%= countHidden %>"><%= monsterData.name %></td>
+                                                    <td><%= initiative(modifiers(monsterData.dexterity)) %></td>
+                                                    <td><%= monsterData.armor_class %></td>
+                                                    <td data-toggle="modal" class="monsterHpTr" data-target=".monsterHpModal-<%= countHidden %>"><%= monsterData.hit_points %></td>
+                                                </tr>
+                                            <% countHidden++; } %>
+                                        </tbody>
+                                    </table>
+                                    <small>A iniciativa dos monstros e NPCs é automaticamente calculada ao serem adicionados na tabela.</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <% let modalCount = 0 %>
+                    <% for(var i=0; i < monsters[0].monstros.length; i++) { %>
+                        <% var monsterData = data[monsters[0].monstros[i]]; %>
+                        <div class="modal fade monsterModal-<%= modalCount %>" id="monsterModal-<%= modalCount %>" tabindex="-1" role="dialog" aria-labelledby="monsterModal-<%= modalCount %>" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel"><%= monsterData.name %></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <%= monsterData.size %> <%= monsterData.type %>, <%= monsterData.alignment %><br>
+                                        <b>Armor Class</b>: <%= monsterData.armor_class %><br>
+                                        <b>Hit Points</b>: <%= monsterData.hit_points %> (<%= monsterData.hit_dice %>)<br>
+                                        <b>Speed</b>: <%= monsterData.speed %>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm">
+                                                <b>STR</b><br><%= monsterData.strength %>
+                                            </div>
+                                            <div class="col-sm">
+                                                <b>DEX</b><br><%= monsterData.dexterity %>
+                                            </div>
+                                            <div class="col-sm">
+                                                <b>CON</b><br><%= monsterData.constitution %>
+                                            </div>
+                                            <div class="col-sm">
+                                                <b>INT</b><br><%= monsterData.intelligence %>
+                                            </div>
+                                            <div class="col-sm">
+                                                <b>WIS</b><br><%= monsterData.wisdom %>
+                                            </div>
+                                            <div class="col-sm">
+                                                <b>CHA</b><br><%= monsterData.charisma %>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <b>Saving Throws</b>
+                                            <% let firstAbi = false; if(monsterData.strength_save != null){ %>
+                                                <% if(firstAbi) { %> 
+                                                |
+                                                <% } %>Str +<%= monsterData.strength_save %>
+                                            <% firstAbi = true; } %>
+                                            <% if(monsterData.dexterity_save != null){ %>
+                                                <% if(firstAbi) { %> 
+                                                |
+                                                <% } %>Dex +<%= monsterData.dexterity_save %>                                                                            <% firstAbi = true; } %>
+                                            <% if(monsterData.constitution_save != null){ %>
+                                                <% if(firstAbi) { %> 
+                                                |
+                                                <% } %> Con +<%= monsterData.constitution_save %>
+                                            <% firstAbi = true; } %>
+                                            <% if(monsterData.intelligence_save != null){ %>
+                                                <% if(firstAbi) { %> 
+                                                |
+                                                <% } %> Int +<%= monsterData.intelligence_save %>
+                                            <% firstAbi = true; } %>
+                                            <% if(monsterData.wisdom_save != null){ %>
+                                                <% if(firstAbi) { %> 
+                                                |
+                                                <% } %> Wis +<%= monsterData.wisdom_save %>
+                                            <% firstAbi = true; } %>
+                                            <% if(monsterData.charisma_save != null){ %>
+                                                <% if(firstAbi) { %> 
+                                                |
+                                                <% } %> Cha +<%= monsterData.charisma_save %>
+                                            <% firstAbi = true; } %>
+                                        <br>
+                                        <b>Skills</b>
+                                            <% let firstSkill = false; if(monsterData.acrobatics != null){ %>
+                                                <% if(firstSkill) { %> 
+                                                |
+                                                <% } %>Acrobatics +<%= monsterData.acrobatics %>
+                                            <% firstSkill = true; } %>
+                                            <% if(monsterData.arcana != null){ %>
+                                                <% if(firstSkill) { %> 
+                                                |
+                                                <% } %>Arcana +<%= monsterData.arcana %>
+                                            <% firstSkill = true; } %>
+                                            <% if(monsterData.athletics != null){ %>
+                                                <% if(firstSkill) { %> 
+                                                |
+                                                <% } %>Atheletics +<%= monsterData.athletics %>
+                                            <% firstSkill = true; } %>
+                                            <% if(monsterData.deception != null){ %>
+                                                <% if(firstSkill) { %> 
+                                                |
+                                                <% } %>Deception +<%= monsterData.deception %>
+                                            <% firstSkill = true; } %>
+                                            <% if(monsterData.history != null){ %>
+                                                <% if(firstSkill) { %> 
+                                                |
+                                                <% } %>History +<%= monsterData.history %>
+                                            <% firstSkill = true; } %>
+                                            <% if(monsterData.insight != null){ %>
+                                                <% if(firstSkill) { %> 
+                                                |
+                                                <% } %>Insight +<%= monsterData.insight %>
+                                            <% firstSkill = true; } %>
+                                            <% if(monsterData.intimidation != null){ %>
+                                                <% if(firstSkill) { %> 
+                                                |
+                                                <% } %>Intimidation +<%= monsterData.intimidation %>
+                                            <% firstSkill = true; } %>
+                                            <% if(monsterData.investigation != null){ %>
+                                                <% if(firstSkill) { %> 
+                                                |
+                                                <% } %>Investigation +<%= monsterData.investigation %>
+                                            <% firstSkill = true; } %>
+                                            <% if(monsterData.medicine != null){ %>
+                                                <% if(firstSkill) { %> 
+                                                |
+                                                <% } %>Medicine +<%= monsterData.medicine %>
+                                            <% firstSkill = true; } %>
+                                            <% if(monsterData.nature != null){ %>
+                                                <% if(firstSkill) { %> 
+                                                |
+                                                <% } %>Nature +<%= monsterData.nature %>
+                                            <% firstSkill = true; } %>
+                                            <% if(monsterData.perception != null){ %>
+                                                <% if(firstSkill) { %> 
+                                                |
+                                                <% } %>Perception +<%= monsterData.perception %>
+                                            <% firstSkill = true; } %>
+                                            <% if(monsterData.performance != null){ %>
+                                                <% if(firstSkill) { %> 
+                                                |
+                                                <% } %>Performance +<%= monsterData.performance %>
+                                            <% firstSkill = true; } %>
+                                            <% if(monsterData.persuasion != null){ %>
+                                                <% if(firstSkill) { %> 
+                                                |
+                                                <% } %>Persuasion +<%= monsterData.persuasion %>
+                                            <% firstSkill = true; } %>
+                                            <% if(monsterData.religion != null){ %>
+                                                <% if(firstSkill) { %> 
+                                                |
+                                                <% } %>Religion +<%= monsterData.religion %>
+                                            <% firstSkill = true; } %>
+                                            <% if(monsterData.stealth != null){ %>
+                                                <% if(firstSkill) { %> 
+                                                |
+                                                <% } %>Stealth +<%= monsterData.stealth %>
+                                            <% firstSkill = true; } %>
+                                            <% if(monsterData.survival != null){ %>
+                                                <% if(firstSkill) { %> 
+                                                |
+                                                <% } %>Survival +<%= monsterData.survival %>
+                                            <% firstSkill = true; } %>
+                                        <br>
+                                        <b>Vulnerabilities</b> 
+                                            <% if(monsterData.damage_vulnerabilities == ""){ %>
+                                                none
+                                            <% }else{ %>
+                                                <%= monsterData.damage_vulnerabilities %>
+                                            <% } %>
+                                        <br>
+                                        <b>Resistances</b> 
+                                            <% if(monsterData.damage_resistances == ""){ %>
+                                                none
+                                            <% }else{ %>
+                                                <%= monsterData.damage_resistances %>
+                                            <% } %>
+                                        <br>
+                                        <b>Immunities</b> 
+                                            <% if(monsterData.damage_immunities == ""){ %>
+                                                none
+                                            <% }else{ %>
+                                                <%= monsterData.damage_immunities %>
+                                            <% } %>
+                                        <br>
+                                        <b>Condition Immunities</b> 
+                                            <% if(monsterData.condition_immunities == ""){ %>
+                                                none
+                                            <% }else{ %>
+                                                <%= monsterData.condition_immunities %>
+                                            <% } %>
+                                        <br>
+                                        <b>Senses</b>
+                                            <% if(monsterData.senses == ""){ %>
+                                                none
+                                            <% }else{ %>
+                                                <%= monsterData.senses %>
+                                            <% } %>
+                                        <br>
+                                        <b>Language</b>
+                                            <% if(monsterData.languages == ""){ %>
+                                                none
+                                            <% }else{ %>
+                                                <%= monsterData.languages %>
+                                            <% } %>
+                                        <br>
+                                        <b>Challenge</b> <%= monsterData.challenge_rating %>
+                                        <hr>
+                                        <% for(var x = 0; x < monsterData.special_abilities.length; x++){ %>
+                                            <b><%= monsterData.special_abilities[x].name %>.</b> <%= monsterData.special_abilities[x].desc %><br>
+                                        <% } %>
+                                        <hr>
+                                        <h5><b>Actions</b></h5>
+                                        <% for(var x = 0; x < monsterData.actions.length; x++){ %>
+                                            <b><%= monsterData.actions[x].name %>.</b> <%= monsterData.actions[x].desc %><br>
+                                        <% } %>
+                                        <hr>
+                                        <h5><b>Legendary Actions</b></h5>
+                                        <% for(var x = 0; x < monsterData.legendary_actions.length; x++){ %>
+                                            <b><%= monsterData.legendary_actions[x].name %>.</b> <%= monsterData.legendary_actions[x].desc %><br>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade monsterHpModal-<%= modalCount %>" id="monsterHpModal-<%= modalCount %>" tabindex="-1" role="dialog" aria-labelledby="monsterHp-<%= modalCount %>" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Hit Points</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-sm">
+                                                <div class="form-group">
+                                                    <label for="monsterHpAtual">HP Atual</label>
+                                                    <input type="number" name="monsterHpAtual" class="form-control monsterHp" value="<%= monsterData.hit_points %>">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm">
+                                                <div class="form-group">
+                                                    <label for="monsterHpTemp">HP Temporário</label>
+                                                    <input type="number" name="monsterHpTemp" class="form-control monsterHpTemp" value="0">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm">
+                                                <div class="form-group">
+                                                    <label for="monsterHpTotal">HP Padrão</label>
+                                                    <input type="number" name="monsterHpTotal" class="form-control monsterHpTotal" value="<%= monsterData.hit_points %>" disabled>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="form-check">
+                                                <input class="dano-cura" type="radio" name="dano-cura" id="dano-cura1" value="dano" checked>
+                                                <label class="form-check-label" for="dano-cura1">
+                                                    Dano
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="dano-cura" type="radio" name="dano-cura" id="dano-cura2" value="cura">
+                                                <label class="form-check-label" for="dano-cura2">
+                                                    Cura
+                                                </label>
+                                            </div>
+                                            <label for="monsterHpAtuali">Quantidade p/ atualizar</label>
+                                            <div class="row">
+                                                <div class="col-sm-4">
+                                                    <input type="number" name="monsterHpAtuali" class="form-control monsterHpAtuali" value="0">
+                                                </div>
+                                                <div class="col-sm-8" style="text-align: right">
+                                                    <button class="btn btn-success saveMonster" mRow="<%= modalCount %>" data-dismiss="modal">Salvar</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% modalCount++; } %>
+                </div>
+
+                <div class="footer">
+                    <% include ../_includes/footer %>
+                    <script>
+                        jQuery(document).ready(function($){
+                            var p = $('.tabelaMonstros').DataTable({
+                                "order": [[ 1, "desc" ]],
+                                "paging": false,
+                                "info": false,
+                                "searching": false,
+                                "fnInitComplete": function () {
+                                    $('table').css('visibility', 'visible');
+                                }
+                            });
+
+                            $(document).on("change", "select", function () {
+                                $("option[value='" + this.value + "']", this)
+                                    .attr("selected", true).siblings()
+                                    .removeAttr("selected")
+                            });
+
+                            $('#playerList').on('change', function () {
+                                var player = $('#playerList option:selected');
+                                $(".hpPj").val(player.attr('hp'));
+                                $(".caPj").val(player.attr('ca'));
+                                $(".desPj").val(player.attr('des'));
+                            });
+
+                            $('.addPlayer').on('click', function () {
+                                var player = $('#playerList option:selected');
+                                var name = player.attr("value");
+                                var hp =  $(".hpPj").val();
+                                var ca = $(".caPj").val();
+                                var des = $(".desPj").val();
+
+                                if (name != 'none') {
+                                    p.row.add([name, des, ca, hp]).draw(false);
+                                }
+                            });
+
+                            $('#npcList').on('change', function () {
+                                var npc = $('#npcList option:selected');
+                                $(".hpNpc").val(npc.attr('hp'));
+                                $(".caNpc").val(npc.attr('ca'));
+                                $(".desNpc").val(npc.attr('des'));
+                            });
+
+                            var npcCount = 0;
+                            $('.addNpc').on('click', function () {
+                                var npc = $('#npcList option:selected');
+                                var name = npc.attr("value");
+                                var hp =  $(".hpNpc").val();
+                                var ca = $(".caNpc").val();
+                                var des = $(".desNpc").val();
+                                var infos = npc.attr("informacoes");
+
+                                if (name != 'none') {
+                                    var trDOM = p.row.add(['<div data-toggle="modal" data-target=".npcModal-'+npcCount+'">'+name+'</div>', des, ca, '<div class="npcHpTr" data-toggle="modal" data-target=".npcHpModal-'+npcCount+'">'+hp+'</div>']).draw(false).node();
+                                    $(trDOM).addClass('npc-'+npcCount);
+                                }
+
+                                $(".content").append(" \
+                                    <div class='modal fade npcModal-"+npcCount+"' id='npcModal-"+npcCount+"' tabindex='-1' role='dialog' aria-labelledby='npcModal-"+npcCount+"' aria-hidden='true'> \
+                                        <div class='modal-dialog modal-lg' role='document'> \
+                                            <div class='modal-content'> \
+                                                <div class='modal-header'> \
+                                                    <h5 class='modal-title' id='exampleModalLabel'>"+name+"</h5> \
+                                                    <button type='button' class='close' data-dismiss='modal' aria-label='Close'> \
+                                                    <span aria-hidden='true'>&times;</span> \
+                                                    </button> \
+                                                </div> \
+                                                <div class='modal-body'> \
+                                                    "+infos+" \
+                                                </div> \
+                                            </div> \
+                                        </div> \
+                                    </div> \
+                                    <div class='modal fade npcHpModal-"+npcCount+"' id='npcHpModal-"+npcCount+"' tabindex='-1' role='dialog' aria-labelledby='monsterHp-"+npcCount+"' aria-hidden='true'> \
+                                        <div class='modal-dialog' role='document'> \
+                                            <div class='modal-content'> \
+                                                <div class='modal-header'> \
+                                                    <h5 class='modal-title' id='exampleModalLabel'>Hit Points</h5> \
+                                                    <button type='button' class='close' data-dismiss='modal' aria-label='Close'> \
+                                                    <span aria-hidden='true'>&times;</span> \
+                                                    </button> \
+                                                </div> \
+                                                <div class='modal-body'> \
+                                                    <div class='row'> \
+                                                        <div class='col-sm'> \
+                                                            <div class='form-group'> \
+                                                                <label for='npcHpAtual'>HP Atual</label> \
+                                                                <input type='number' name='npcHpAtual' class='form-control npcHp' value='"+hp+"'> \
+                                                            </div> \
+                                                        </div> \
+                                                        <div class='col-sm'> \
+                                                            <div class='form-group'> \
+                                                                <label for='npcHpTemp'>HP Temporário</label> \
+                                                                <input type='number' name='npcHpTemp' class='form-control npcHpTemp' value='0'> \
+                                                            </div> \
+                                                        </div> \
+                                                        <div class='col-sm'> \
+                                                            <div class='form-group'> \
+                                                                <label for='npcHpTotal'>HP Padrão</label> \
+                                                                <input type='number' name='npcHpTotal' class='form-control npcHpTotal' value='"+hp+"' disabled> \
+                                                            </div> \
+                                                        </div> \
+                                                    </div> \
+                                                    <div class='form-group'> \
+                                                        <div class='form-check'> \
+                                                            <input class='dano-cura' type='radio' name='dano-cura' id='dano-cura1' value='dano' checked> \
+                                                            <label class='form-check-label' for='dano-cura1'> \
+                                                                Dano \
+                                                            </label> \
+                                                        </div> \
+                                                        <div class='form-check'> \
+                                                            <input class='dano-cura' type='radio' name='dano-cura' id='dano-cura2' value='cura'> \
+                                                            <label class='form-check-label' for='dano-cura2'> \
+                                                                Cura \
+                                                            </label> \
+                                                        </div> \
+                                                        <label for='npcHpAtuali'>Quantidade p/ atualizar</label> \
+                                                        <div class='row'> \
+                                                            <div class='col-sm-4'> \
+                                                                <input type='number' name='npcHpAtuali' class='form-control npcHpAtuali' value='0'> \
+                                                            </div> \
+                                                            <div class='col-sm-8' style='text-align: right'> \
+                                                                <button class='btn btn-success saveNpc' mRow='"+npcCount+"' data-dismiss='modal'>Salvar</button> \
+                                                            </div> \
+                                                        </div> \
+                                                    </div> \
+                                                </div> \
+                                            </div> \
+                                        </div> \
+                                    </div> " );
+
+                                npcCount++;
+                            });
+
+                            $(".saveMonster").on('click', function (){
+                                var mRow = $(this).attr('mRow');
+                                var monsterHp = $(".monsterHpModal-"+mRow+" .monsterHp").val();
+                                var monsterHpTemp = $(".monsterHpModal-"+mRow+" .monsterHpTemp").val();
+                                var monsterHpTotal = $(".monsterHpModal-"+mRow+" .monsterHpTotal").val();
+                                var atualizacao = $(".monsterHpModal-"+mRow+" .dano-cura:checked").val();
+                                var monsterHpAtuali = $(".monsterHpModal-"+mRow+" .monsterHpAtuali").val();
+
+                                monsterHp = parseInt(monsterHp);
+                                monsterHpTemp = parseInt(monsterHpTemp);
+                                monsterHpAtuali = parseInt(monsterHpAtuali); 
+                                
+                                var total = 0;
+                                if(atualizacao=="cura"){
+                                    total = monsterHp+monsterHpTemp+monsterHpAtuali;
+                                    $(".monster-"+mRow+" .monsterHpTr").html(total);
+                                    $(".monsterHpModal-"+mRow+" .monsterHpAtuali").val('0');
+                                    $(".monsterHpModal-"+mRow+" .monsterHp").val(total - monsterHpTemp);
+                                }else{
+                                    if( monsterHpAtuali >= monsterHpTemp){
+                                        $(".monsterHpModal-"+mRow+" .monsterHpTemp").val('0');
+                                        $(".monsterHpModal-"+mRow+" .monsterHpAtuali").val('0');
+                                        monsterHpAtuali = monsterHpAtuali - monsterHpTemp;
+                                        total = monsterHp - monsterHpAtuali;
+                                        $(".monster-"+mRow+" .monsterHpTr").html(total);
+                                        $(".monsterHpModal-"+mRow+" .monsterHp").val(total);
+                                    }else{
+                                        monsterHpTemp = monsterHpTemp - monsterHpAtuali;
+                                        $(".monsterHpModal-"+mRow+" .monsterHpTemp").val(monsterHpTemp);
+                                        $(".monsterHpAtuali").val('0');
+                                        $(".monster-"+mRow+" .monsterHpTr").html(monsterHp + monsterHpTemp);
+                                        $(".monsterHpModal-"+mRow+" .monsterHp").val(monsterHp);
+                                    }
+                                }
+                            })
+
+
+                            $(document).on('click', '.saveNpc', function(){
+                                var mRow = $(this).attr('mRow');
+                                var npcHp = $(".npcHpModal-"+mRow+" .npcHp").val();
+                                var npcHpTemp = $(".npcHpModal-"+mRow+" .npcHpTemp").val();
+                                var npcHpTotal = $(".npcHpModal-"+mRow+" .npcHpTotal").val();
+                                var atualizacao = $(".npcHpModal-"+mRow+" .dano-cura:checked").val();
+                                var npcHpAtuali = $(".npcHpModal-"+mRow+" .npcHpAtuali").val();
+
+                                var dead = false;
+
+                                npcHp = parseInt(npcHp);
+                                npcHpTemp = parseInt(npcHpTemp);
+                                npcHpAtuali = parseInt(npcHpAtuali);
+
+                                var total = 0;
+                                if(atualizacao=="cura"){
+                                    total = npcHp+npcHpTemp+npcHpAtuali;
+                                    $(".npc-"+mRow+" .npcHpTr").html(total);
+                                    $(".npcHpModal-"+mRow+" .npcHpAtuali").val('0');
+                                    $(".npcHpModal-"+mRow+" .npcHp").val(total - npcHpTemp);
+                                }else{
+                                    if( npcHpAtuali >= npcHpTemp){
+                                        $(".npcHpModal-"+mRow+" .npcHpTemp").val('0');
+                                        $(".npcHpModal-"+mRow+" .npcHpAtuali").val('0');
+                                        npcHpAtuali = npcHpAtuali - npcHpTemp;
+                                        total = npcHp - npcHpAtuali;
+                                        $(".npc-"+mRow+" .npcHpTr").html(total);
+                                        $(".npcHpModal-"+mRow+" .npcHp").val(total);
+                                        if(total <= 0){
+                                            $(".npc-"+mRow).css("background-color", "#ff6666");
+                                        }
+                                    }else{
+                                        npcHpTemp = npcHpTemp - npcHpAtuali;
+                                        $(".npcHpModal-"+mRow+" .npcHpTemp").val(npcHpTemp);
+                                        $(".npcHpAtuali").val('0');
+                                        $(".npc-"+mRow+" .npcHpTr").html(npcHp + npcHpTemp);
+                                        $(".npcHpModal-"+mRow+" .npcHp").val(npcHp);
+                                    }
+                                }
+
+                            })
+
+                        });
+                    </script>
+                </div>
+</body>
+
+</html>

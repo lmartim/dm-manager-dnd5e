@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Combat manager</title>
+
+
+    </head>
+
+    <script>
+        var data = <%- JSON.stringify(data) %>;
+    </script>
+    <body>
+        <div class="header">
+            <% include ../_includes/header %>
+        </div>
+
+        <% include ../_includes/menus %>
+        <div class="content">
+            <div class="container-fluid">
+                <form name="combate" method="POST" action="../../npcs/editar">
+                    <input type="hidden" name="_id" value="<%= data[0]._id %>">
+                    <div class="form-group">
+                        <label form="nome">Nome do NPC</label>
+                        <input type="text" class="form-control" name="nome" id="nome" placeholder="Nome" value="<%= data[0].nome %>">
+                    </div>
+                    <div class="row">
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="hp">HP Total</label>
+                                <input type="number" class="form-control" name="hp" id="hp" placeholder="HP" value="<%= data[0].hp %>">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="ca">Classe de Armadura</label>
+                                <input type="number" class="form-control" name="ca" id="ca" placeholder="CA" value="<%= data[0].ca %>">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="des">Modificador de Destreza</label>
+                                <input type="number" class="form-control" name="des" id="des" placeholder="Des" value="<%= data[0].des %>">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label form="informacoes">Informações do NPC</label>
+                        <textarea type="text" class="form-control" name="informacoes" id="informacoes" placeholder="Informações" ><%= data[0].informacoes %></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label form="background">Background do NPC</label>
+                        <textarea type="text" class="form-control" name="background" id="background" placeholder="Background" ><%= data[0].background %></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="enviar">Enviar</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="footer">
+            <% include ../_includes/footer %>
+        </div>
+    </body>
+</html>
