@@ -134,6 +134,7 @@
                                                 <th>Inic.</th>
                                                 <th>CA</th>
                                                 <th>HP</th>
+                                                <th></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -145,6 +146,7 @@
                                                     <td><%= initiative(modifiers(monsterData.dexterity)) %></td>
                                                     <td><%= monsterData.armor_class %></td>
                                                     <td data-toggle="modal" class="monsterHpTr" data-target=".monsterHpModal-<%= countHidden %>"><%= monsterData.hit_points %></td>
+                                                    <td><span class="btn btn-warning remover">Remover</span></td>
                                                 </tr>
                                             <% countHidden++; } %>
                                         </tbody>
@@ -462,7 +464,7 @@
                                 var des = $(".desPj").val();
 
                                 if (name != 'none') {
-                                    p.row.add([name, des, ca, hp]).draw(false);
+                                    p.row.add([name, des, ca, hp, '<span class="btn btn-warning remover">Remover</span>']).draw(false);
                                 }
                             });
 
@@ -483,7 +485,7 @@
                                 var infos = npc.attr("informacoes");
 
                                 if (name != 'none') {
-                                    var trDOM = p.row.add(['<div data-toggle="modal" data-target=".npcModal-'+npcCount+'">'+name+'</div>', des, ca, '<div class="npcHpTr" data-toggle="modal" data-target=".npcHpModal-'+npcCount+'">'+hp+'</div>']).draw(false).node();
+                                    var trDOM = p.row.add(['<div data-toggle="modal" data-target=".npcModal-'+npcCount+'">'+name+'</div>', des, ca, '<div class="npcHpTr" data-toggle="modal" data-target=".npcHpModal-'+npcCount+'">'+hp+'</div>', '<span class="btn btn-warning remover">Remover</span>']).draw(false).node();
                                     $(trDOM).addClass('npc-'+npcCount);
                                 }
 
@@ -643,6 +645,9 @@
 
                             })
 
+                            $(document).on('click', '.remover', function () {
+                                p.row($(this).parents('tr')).remove().draw();
+                            });
                         });
                     </script>
                 </div>
