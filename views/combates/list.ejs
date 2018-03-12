@@ -24,10 +24,11 @@
                         <div class="form-group">
                             <h2 style="display: inline-block">Combates</h2>
                             <a class="btn btn-primary" href="/combates/create" style="float: right";>Adicionar Combate</a>
-                            <% if (typeof message !== 'undefined') { %>
-                                <div class="alert alert-danger"><%= message %></div>
+                            <% if (success && success.length > 0) { %>
+                                <div class="alert alert-success"><%= success %></div>
+                            <% }else if(error && error.length > 0){ %>
+                                <div class="alert alert-danger"><%= error %></div>
                             <% } %>
-                            
                             <div class="row">
                                 <div class="col-sm combat">
                                     <table class="tabelaMonstros diplay" style="visibility: hidden;">

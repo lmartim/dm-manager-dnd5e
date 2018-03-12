@@ -62,7 +62,7 @@ module.exports = function (app, passport, mongoose, configDB) {
 
     app.get("/combates/edit/:id", function (req, res) {
         var _id = req.params.id;
-        var monsters = require("./public/json/monsters.json");
+        var monsters = require("../public/json/monsters.json");
 
         let db = mongoose.connect(configDB.db.uri, {
             useMongoClient: true,
@@ -102,14 +102,15 @@ module.exports = function (app, passport, mongoose, configDB) {
             let result = new CombatSchema(req.body);
             console.log(req.body);
             result.update(req.body, function (err, affected, resp) {
-                console.log(err);
-                console.log(affected);
-                console.log(resp);
+                if (err) {
+                    req.flash('error', 'Não foi possível editar o cadastro...');
+                    res.redirect('../list');
+                } else {
+                    req.flash('success', 'Cadastro editado com sucesso!');
+                    res.redirect('../list');
+                }
             })
         })
-
-        req.flash('success')
-        res.redirect('back');
     })
 
     app.post("/combates/cadastro", isLoggedIn, function (req, res) {
@@ -134,13 +135,14 @@ module.exports = function (app, passport, mongoose, configDB) {
             console.log(req.body);
             result.save((err) => {
                 if (err) {
-                    console.log(err);
+                    req.flash('error', 'Não foi possível realizar o cadastro...');
+                    res.redirect('../list');
+                } else {
+                    req.flash('success', 'Cadastro realizado com sucesso!');
+                    res.redirect('../list');
                 }
             });
         })
-
-        req.flash('success')
-        res.redirect('back');
     })
 
     app.get("/combates/run/:id", isLoggedIn, function(req, res) {
@@ -176,6 +178,37 @@ module.exports = function (app, passport, mongoose, configDB) {
                     });
                 }
             });
+        })
+    })
+
+    app.get("/combates/remove/:id", isLoggedIn, function (req, res) {
+        var _id = req.params.id;
+
+        // instacia o mongoose e faz a conexão
+        let db = mongoose.connect(configDB.db.uri, {
+            useMongoClient: true,
+            autoIndex: false,
+            poolSize: 30
+        })
+
+        //evento conexão
+        db.on('error', console.error.bind(console, 'connection error:'))
+        db.once('open', () => {
+            console.log('mongoose conected in ' + configDB.db.uri.replace('mongodb://', ''))
+
+            var CombatSchema = require('../app/models/CombatSchema');
+
+            // let result = new playerSchema(req.body);
+            console.log(req.body);
+            CombatSchema.remove({ '_id': _id }, function (err, affected, resp) {
+                if (err) {
+                    req.flash('error', 'Não foi possível deletar o cadastro...');
+                    res.redirect('../list');
+                } else {
+                    req.flash('success', 'Cadastro deletado com sucesso!');
+                    res.redirect('../list');
+                }
+            })
         })
     })
 
@@ -281,11 +314,11 @@ module.exports = function (app, passport, mongoose, configDB) {
             console.log(req.body);
             result.update(req.body, function (err, affected, resp) {
                 if (err) {
-                    req.flash('error', 'Não foi possível completar a edição...');
-                    res.redirect('list');
+                    req.flash('error', 'Não foi possível editar o cadastro...');
+                    res.redirect('../list');
                 } else {
                     req.flash('success', 'Cadastro editado com sucesso!');
-                    res.redirect('list');
+                    res.redirect('../list');
                 }
             })
         })
@@ -315,7 +348,7 @@ module.exports = function (app, passport, mongoose, configDB) {
                 console.log("affected:"+affected);
                 console.log("resp:"+resp);
                 if (err) {
-                    req.flash('error', 'Não foi possível deletar o cadastro');
+                    req.flash('error', 'Não foi possível deletar o cadastro...');
                     res.redirect('../list');
                 } else {
                     req.flash('success', 'Cadastro deletado com sucesso!');
@@ -380,7 +413,7 @@ module.exports = function (app, passport, mongoose, configDB) {
             console.log(req.body);
             result.save((err) => {
                 if (err) {
-                    req.flash('error', 'Não foi possível completar o cadastro');
+                    req.flash('error', 'Não foi possível completar o cadastro...');
                     res.redirect('../create');
                 } else {
                     req.flash('success', 'Cadastro realizado com sucesso!');
@@ -432,7 +465,7 @@ module.exports = function (app, passport, mongoose, configDB) {
             console.log(req.body);
             result.update(req.body, function (err, affected, resp) {
                 if (err) {
-                    req.flash('error', 'Não foi possível completar a edição...');
+                    req.flash('error', 'Não foi possível editar o cadastro...');
                     res.redirect('list');
                 } else {
                     req.flash('success', 'Cadastro editado com sucesso!');
@@ -465,7 +498,7 @@ module.exports = function (app, passport, mongoose, configDB) {
                 console.log("affected:" + affected);
                 console.log("resp:" + resp);
                 if (err) {
-                    req.flash('error', 'Não foi possível deletar o cadastro');
+                    req.flash('error', 'Não foi possível deletar o cadastro...');
                     res.redirect('../list');
                 } else {
                     req.flash('success', 'Cadastro deletado com sucesso!');

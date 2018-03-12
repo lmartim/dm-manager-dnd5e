@@ -81,7 +81,7 @@
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="form-group">
-                                                <label for="des">Mod. Des</label>
+                                                <label for="des">iniciativa</label>
                                                 <input type="text" class="des desPj form-control" id="des" name="des" placeholder="0">
                                             </div>
                                         </div>
@@ -361,9 +361,11 @@
                                             <b><%= monsterData.actions[x].name %>.</b> <%= monsterData.actions[x].desc %><br>
                                         <% } %>
                                         <hr>
-                                        <h5><b>Legendary Actions</b></h5>
-                                        <% for(var x = 0; x < monsterData.legendary_actions.length; x++){ %>
-                                            <b><%= monsterData.legendary_actions[x].name %>.</b> <%= monsterData.legendary_actions[x].desc %><br>
+                                        <% if(monsterData.legendary_actions){ %>
+                                            <h5><b>Legendary Actions</b></h5>
+                                            <% for(var x = 0; x < monsterData.legendary_actions.length; x++){ %>
+                                                <b><%= monsterData.legendary_actions[x].name %>.</b> <%= monsterData.legendary_actions[x].desc %><br>
+                                            <% } %>
                                         <% } %>
                                     </div>
                                 </div>

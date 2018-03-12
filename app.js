@@ -24,7 +24,7 @@ app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 app.use(function (req, res, next) {
     res.locals.success = req.flash('success');
-    res.locals.errors = req.flash('error');
+    res.locals.error = req.flash('error');
     next();
 });
 

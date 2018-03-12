@@ -23,6 +23,8 @@
                             <a class="btn btn-primary" href="/npcs/create" style="float: right">Adicionar NPC</a>
                             <% if (success && success.length > 0) { %>
                                 <div class="alert alert-success"><%= success %></div>
+                            <% }else if(error && error.length){ %>
+                                <div class="alert alert-danger"><%= error %></div>
                             <% } %>
                             <div class="row">
                                 <div class="col-sm combat">
