@@ -24,7 +24,6 @@
         console.log(npcs);
         // console.log(data);
     </script>
-
             <% include ../_includes/menus %>
             <% include ../_includes/helpers.ejs %>
                 <div class="content">
@@ -138,17 +137,28 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <% let countHidden = 0 %>
-                                            <% for(var i=0; i < monsters[0].monstros.length; i++) { %>
-                                                <% var monsterData = data[monsters[0].monstros[i]]; %>
+                                            <% let monsterArray = []; let monsterIdentifier = 1; %>
+                                            <% let countHidden = 0;  %>
+                                            <% for(var i=0; i < monsters[0].monstros.length; i++) { 
+                                                var monsterData = data[monsters[0].monstros[i]]; 
+                                                if(monsterArray.length == 0){
+                                                    monsterArray.push(monsterData.name);
+                                                }else{
+                                                    monsterArray.push(monsterData.name);
+                                                    for(var y = 0; y < monsterArray.length; y++){
+                                                        if(monsterArray[y] == monsterData.name){
+                                                            monsterIdentifier = monsterIdentifier + 1;
+                                                        }
+                                                    }
+                                                }%>
                                                 <tr class="monster-<%= countHidden %>">
-                                                    <td data-toggle="modal" data-target=".monsterModal-<%= countHidden %>"><%= monsterData.name %></td>
+                                                    <td data-toggle="modal" data-target=".monsterModal-<%= countHidden %>"><%= monsterData.name %> <%= monsterIdentifier %></td>
                                                     <td><%= initiative(modifiers(monsterData.dexterity)) %></td>
                                                     <td><%= monsterData.armor_class %></td>
                                                     <td data-toggle="modal" class="monsterHpTr" data-target=".monsterHpModal-<%= countHidden %>"><%= monsterData.hit_points %></td>
                                                     <td><span class="btn btn-warning remover">Remover</span></td>
                                                 </tr>
-                                            <% countHidden++; } %>
+                                            <% countHidden++; monsterIdentifier = 0; } %>
                                         </tbody>
                                     </table>
                                     <small>A iniciativa dos monstros e NPCs é automaticamente calculada ao serem adicionados na tabela.</small>
