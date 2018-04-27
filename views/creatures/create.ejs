@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Combat manager</title>
+
+
+    </head>
+    <body>
+        <div class="header">
+            <% include ../_includes/header %>
+        </div>
+
+        <% include ../_includes/menus %>
+        <div class="content">
+            <div class="container-fluid">
+                <form name="combate" method="POST" action="cadastro/">
+                    <div class="row">
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="name">Nome</label>
+                                <input type="text" class="form-control" name="name" id="name" placeholder="Nome">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="size">Tamanho</label>
+                                <input type="text" class="form-control" name="size" id="size" placeholder="Tamanho">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="type">Tipo</label>
+                                <input type="text" class="form-control" name="type" id="type" placeholder="Tipo">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="subtype">Subtipo</label>
+                                <input type="text" class="form-control" name="subtype" id="subtype" placeholder="Subtipo">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="alignment">Alinhamento</label>
+                                <input type="text" class="form-control" name="alignment" id="alignment" placeholder="Alinhamento">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="armor_class">Classe de Armadura</label>
+                                <input type="text" class="form-control" name="armor_class" id="armor_class" placeholder="Classe de Armadura">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="hit_points">Pontos de Vida</label>
+                                <input type="text" class="form-control" name="hit_points" id="hit_points" placeholder="Pontos de Vida">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="hit_dice">Dados de Vida</label>
+                                <input type="text" class="form-control" name="hit_dice" id="hit_dice" placeholder="Dados de Vida">
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="strength">Força</label>
+                                <input type="text" class="form-control" name="strength" id="strength" placeholder="Força">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="dexterity">Destreza</label>
+                                <input type="text" class="form-control" name="dexterity" id="dexterity" placeholder="Destreza">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="constitution">Constituição</label>
+                                <input type="text" class="form-control" name="constitution" id="constitution" placeholder="Constituição">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="intelligence">Inteligência</label>
+                                <input type="text" class="form-control" name="intelligence" id="intelligence" placeholder="Inteligência">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="wisdom">Sabedoria</label>
+                                <input type="text" class="form-control" name="wisdom" id="wisdom" placeholder="Sabedoria">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="charisma">Carisma</label>
+                                <input type="text" class="form-control" name="charisma" id="charisma" placeholder="Carisma">
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="strength_save">TR. Força</label>
+                                <input type="text" class="form-control" name="strength_save" id="strength_save" placeholder="TR. Força">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="dexterity_save">TR. Destreza</label>
+                                <input type="text" class="form-control" name="dexterity_save" id="dexterity_save" placeholder="TR. Destreza">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="constitution_save">TR. Constituição</label>
+                                <input type="text" class="form-control" name="constitution_save" id="constitution_save" placeholder="TR Constituição">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="intelligence_save">TR. Inteligência</label>
+                                <input type="text" class="form-control" name="intelligence_save" id="intelligence_save" placeholder="TR. Inteligência">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="wisdom_save">TR. Sabedoria</label>
+                                <input type="text" class="form-control" name="wisdom_save" id="wisdom_save" placeholder="TR. Sabedoria">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="charisma_save">TR. Carisma</label>
+                                <input type="text" class="form-control" name="charisma_save" id="charisma_save" placeholder="TR. Carisma">
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="acrobatics">Acrobacia</label>
+                                <input type="text" class="form-control" name="acrobatics" id="acrobatics" placeholder="Acrobacia">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="arcana">Arcanismo</label>
+                                <input type="text" class="form-control" name="arcana" id="arcana" placeholder="Arcanismo">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="athletics">Atletismo</label>
+                                <input type="text" class="form-control" name="athletics" id="athletics" placeholder="Atletismo">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="deception">Enganação</label>
+                                <input type="text" class="form-control" name="deception" id="deception" placeholder="Enganação">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="history">História</label>
+                                <input type="text" class="form-control" name="history" id="history" placeholder="História">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="insight">Intuição</label>
+                                <input type="text" class="form-control" name="insight" id="insight" placeholder="Intuição">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="intimidation">Intimidação</label>
+                                <input type="text" class="form-control" name="intimidation" id="intimidation" placeholder="Intimidação">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="investigation">Investigação</label>
+                                <input type="text" class="form-control" name="investigation" id="investigation" placeholder="Investigação">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="medicine">Medicina</label>
+                                <input type="text" class="form-control" name="medicine" id="medicine" placeholder="Medicina">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="nature">Natureza</label>
+                                <input type="text" class="form-control" name="nature" id="nature" placeholder="Natureza">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="perception">Percepção</label>
+                                <input type="text" class="form-control" name="perception" id="perception" placeholder="Percepção">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="performance">Performance</label>
+                                <input type="text" class="form-control" name="performance" id="performance" placeholder="Performance">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="persuasion">Persuasão</label>
+                                <input type="text" class="form-control" name="persuasion" id="persuasion" placeholder="Persuasão">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="religion">Religião</label>
+                                <input type="text" class="form-control" name="religion" id="religion" placeholder="Religião">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="stealth">Furtividade</label>
+                                <input type="text" class="form-control" name="stealth" id="stealth" placeholder="Furtividade">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="survival">Sobrevivência</label>
+                                <input type="text" class="form-control" name="survival" id="survival" placeholder="Sobrevivência">
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="damage_vulnerabilities">Vulnerabilidades</label>
+                                <input type="text" class="form-control" name="damage_vulnerabilities" id="damage_vulnerabilities" placeholder="Vulnerabilidades">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="damage_resistances">Resistências</label>
+                                <input type="text" class="form-control" name="damage_resistances" id="damage_resistances" placeholder="Resistências">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="damage_immunities">Imunidades</label>
+                                <input type="text" class="form-control" name="damage_immunities" id="damage_immunities" placeholder="Imunidades">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="senses">Sentidos</label>
+                                <input type="text" class="form-control" name="senses" id="senses" placeholder="Sentidos">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="languages">Linguagens</label>
+                                <input type="text" class="form-control" name="languages" id="languages" placeholder="Linguagens">
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label form="challenge_rating">Nível de Desafio</label>
+                                <input type="text" class="form-control" name="challenge_rating" id="challenge_rating" placeholder="Nível de Desafio">
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="enviar">Enviar</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="footer">
+            <% include ../_includes/footer %>
+        </div>
+    </body>
+</html>
