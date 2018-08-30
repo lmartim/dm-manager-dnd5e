@@ -369,11 +369,12 @@
                                         <b>Challenge</b> <%= monsterData.challenge_rating %>
                                         <hr>
                                         <% if(monsterData.special_abilities){ %>
+                                            <h5><b>Special Abilities</b></h5>
                                             <% for(var x = 0; x < monsterData.special_abilities.length; x++){ %>
                                                 <b><%= monsterData.special_abilities[x].name %>.</b> <%= monsterData.special_abilities[x].desc %><br>
                                             <% } %>
+                                            <hr>
                                         <% } %>
-                                        <hr>
                                         <h5><b>Actions</b></h5>
                                         <% for(var x = 0; x < monsterData.actions.length; x++){ %>
                                             <b><%= monsterData.actions[x].name %>.</b> <%= monsterData.actions[x].desc %><br>

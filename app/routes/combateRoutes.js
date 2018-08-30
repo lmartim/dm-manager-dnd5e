@@ -88,10 +88,10 @@ module.exports = function (app, passport, mongoose, configDB) {
             result.update(req.body, function (err, affected, resp) {
                 if (err) {
                     req.flash('error', 'Não foi possível editar o cadastro...');
-                    res.redirect('../list');
+                    res.redirect('../combates/list');
                 } else {
                     req.flash('success', 'Cadastro editado com sucesso!');
-                    res.redirect('../list');
+                    res.redirect('../combates/list');
                 }
             })
         })
