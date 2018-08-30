@@ -10,6 +10,14 @@ module.exports = function (app, passport, mongoose, configDB) {
         res.redirect('/');
     }
 
+    app.get('/users', function(req, res){
+        monsters = require("../../public/json/monsters.json")
+        res.json([{
+            monsters: JSON.stringify(monsters)
+        }]);
+        console.log(res);
+    })
+
     app.get('/combates/create', isLoggedIn, function (req, res) {
         var monsters = require("../../public/json/monsters.json");
 

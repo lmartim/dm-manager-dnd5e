@@ -15,13 +15,13 @@
         <% include ../_includes/header %>
     </div>
     <script>
-        var monsters = <%- JSON.stringify(monsters) %>;
-        var players = <%- JSON.stringify(players) %>;
-        var npcs = <%- JSON.stringify(npcs) %>;
-        var data = <%- JSON.stringify(data) %>;
+        let monsters = <%- JSON.stringify(monsters) %>;
+        let players = <%- JSON.stringify(players) %>;
+        let npcs = <%- JSON.stringify(npcs) %>;
+        let data = <%- JSON.stringify(data) %>;
         // console.log(monsters);
         // console.log(players);
-        console.log(npcs);
+        // console.log(npcs);
         // console.log(data);
     </script>
             <% include ../_includes/menus %>
@@ -36,21 +36,27 @@
                                 <div class="alert alert-danger"><%= message %></div>
                             <% } %>
                             
-                            <!-- <div class="row">
-                                <div class="col-sm-12">
+                            <div class="row formMonsters">
+                                <div class="col-sm-10">
                                     <div class="form-group">
                                         <label for="monsterList">Lista de Monstros</label>
                                         <select class="form-control" id="monsterList">
                                             <% for(var i=0; i < data.length; i++) {  %>
-                                                <option mid="<%= i %>" cr="<%= data[i].challenge_rating %>" value="<%= data[i].name %>">
-                                                        <%= data[i].name %>
+                                                <option mid="<%= i %>">
+                                                        <%= data[i].name %> - HP: <%= data[i].hit_points %> - CA: <%= data[i].armor_class %> - ND: <%= data[i].challenge_rating %>
                                                 </option>
                                             <% } %>
                                         </select>
                                     </div>
                                     <div class="btn btn-success addMonster">Adicionar Monstro</div>
                                 </div>
-                            </div> -->
+                                <div class="col-sm">
+                                    <div class="form-group">
+                                        <label for="monsterDex">Iniciativa</label>
+                                        <input type="text" class="inic inicMonst form-control" id="inicMonst" name="inicMonst" placeholder="0">
+                                    </div>
+                                </div>
+                            </div>
                             <br>
                             <div class="row">
                                 <div class="col-sm-6">
@@ -80,7 +86,7 @@
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="form-group">
-                                                <label for="des">iniciativa</label>
+                                                <label for="des">Iniciativa</label>
                                                 <input type="text" class="des desPj form-control" id="des" name="des" placeholder="0">
                                             </div>
                                         </div>
@@ -152,7 +158,7 @@
                                                     }
                                                 }%>
                                                 <tr class="monster-<%= countHidden %>">
-                                                    <td data-toggle="modal" data-target=".monsterModal-<%= countHidden %>"><%= monsterData.name %> <%= monsterIdentifier %></td>
+                                                    <td data-toggle="modal" data-target=".monsterModal-<%= countHidden %>"><input type="text" value="<%= monsterData.name %> <%= monsterIdentifier %>"></input></td>
                                                     <td><%= initiative(modifiers(monsterData.dexterity)) %></td>
                                                     <td><%= monsterData.armor_class %></td>
                                                     <td data-toggle="modal" class="monsterHpTr" data-target=".monsterHpModal-<%= countHidden %>"><%= monsterData.hit_points %></td>
@@ -362,8 +368,10 @@
                                         <br>
                                         <b>Challenge</b> <%= monsterData.challenge_rating %>
                                         <hr>
-                                        <% for(var x = 0; x < monsterData.special_abilities.length; x++){ %>
-                                            <b><%= monsterData.special_abilities[x].name %>.</b> <%= monsterData.special_abilities[x].desc %><br>
+                                        <% if(monsterData.special_abilities){ %>
+                                            <% for(var x = 0; x < monsterData.special_abilities.length; x++){ %>
+                                                <b><%= monsterData.special_abilities[x].name %>.</b> <%= monsterData.special_abilities[x].desc %><br>
+                                            <% } %>
                                         <% } %>
                                         <hr>
                                         <h5><b>Actions</b></h5>
@@ -444,8 +452,11 @@
                 <div class="footer">
                     <% include ../_includes/footer %>
                     <script>
-                        jQuery(document).ready(function($){
-                            var p = $('.tabelaMonstros').DataTable({
+                        jQuery(document).ready(function($){ 
+
+                            let modalCount = <%- modalCount %>;
+                            console.log(modalCount);
+                            let p = $('.tabelaMonstros').DataTable({
                                 "order": [[ 1, "desc" ]],
                                 "paging": false,
                                 "info": false,
@@ -462,18 +473,18 @@
                             });
 
                             $('#playerList').on('change', function () {
-                                var player = $('#playerList option:selected');
+                                let player = $('#playerList option:selected');
                                 $(".hpPj").val(player.attr('hp'));
                                 $(".caPj").val(player.attr('ca'));
                                 $(".desPj").val(player.attr('des'));
                             });
 
                             $('.addPlayer').on('click', function () {
-                                var player = $('#playerList option:selected');
-                                var name = player.attr("value");
-                                var hp =  $(".hpPj").val();
-                                var ca = $(".caPj").val();
-                                var des = $(".desPj").val();
+                                let player = $('#playerList option:selected');
+                                let name = player.attr("value");
+                                let hp =  $(".hpPj").val();
+                                let ca = $(".caPj").val();
+                                let des = $(".desPj").val();
 
                                 if (name != 'none') {
                                     p.row.add([name, des, ca, hp, '<span class="btn btn-warning remover">Remover</span>']).draw(false);
@@ -481,23 +492,23 @@
                             });
 
                             $('#npcList').on('change', function () {
-                                var npc = $('#npcList option:selected');
+                                let npc = $('#npcList option:selected');
                                 $(".hpNpc").val(npc.attr('hp'));
                                 $(".caNpc").val(npc.attr('ca'));
                                 $(".desNpc").val(npc.attr('des'));
                             });
 
-                            var npcCount = 0;
+                            let npcCount = 0;
                             $('.addNpc').on('click', function () {
-                                var npc = $('#npcList option:selected');
-                                var name = npc.attr("value");
-                                var hp =  $(".hpNpc").val();
-                                var ca = $(".caNpc").val();
-                                var des = $(".desNpc").val();
-                                var infos = npc.attr("informacoes");
+                                let npc = $('#npcList option:selected');
+                                let name = npc.attr("value");
+                                let hp =  $(".hpNpc").val();
+                                let ca = $(".caNpc").val();
+                                let des = $(".desNpc").val();
+                                let infos = npc.attr("informacoes");
 
                                 if (name != 'none') {
-                                    var trDOM = p.row.add(['<div data-toggle="modal" data-target=".npcModal-'+npcCount+'">'+name+'</div>', des, ca, '<div class="npcHpTr" data-toggle="modal" data-target=".npcHpModal-'+npcCount+'">'+hp+'</div>', '<span class="btn btn-warning remover">Remover</span>']).draw(false).node();
+                                    let trDOM = p.row.add(['<div data-toggle="modal" data-target=".npcModal-'+npcCount+'">'+name+'</div>', des, ca, '<div class="npcHpTr" data-toggle="modal" data-target=".npcHpModal-'+npcCount+'">'+hp+'</div>', '<span class="btn btn-warning remover">Remover</span>']).draw(false).node();
                                     $(trDOM).addClass('npc-'+npcCount);
                                 }
 
@@ -578,7 +589,7 @@
                                 npcCount++;
                             });
 
-                            $(".saveMonster").on('click', function (){
+                            $(document).on('click', '.saveMonster',function (){
                                 var mRow = $(this).attr('mRow');
                                 var monsterHp = $(".monsterHpModal-"+mRow+" .monsterHp").val();
                                 var monsterHpTemp = $(".monsterHpModal-"+mRow+" .monsterHpTemp").val();
@@ -613,7 +624,6 @@
                                     }
                                 }
                             })
-
 
                             $(document).on('click', '.saveNpc', function(){
                                 var mRow = $(this).attr('mRow');
@@ -656,6 +666,118 @@
                                 }
 
                             })
+
+                            $('.addMonster').on('click', function () {
+                                let mid = $('#monsterList option:selected').attr("mid");
+                                let inic = $(".formMonsters .inicMonst").val();
+
+                                let monsterData = data[mid];
+                                console.log(monsterData);
+
+                                let trDOM = p.row.add(['<div data-toggle="modal" data-target=".monsterModal-' + modalCount + '"><input type="text" value="' + monsterData.name +'"></div>', inic, monsterData.armor_class, '<div class="monsterHpTr" data-toggle="modal" data-target=".monsterHpModal-' + modalCount + '">' + monsterData.hit_points + '</div>', '<span class="btn btn-warning remover">Remover</span>']).draw(false).node();
+                                $(trDOM).addClass('monster-' + modalCount);
+
+                                $("body").append(' \
+                                    <div class="modal fade monsterModal-'+modalCount+'" id="monsterModal-'+modalCount+'" tabindex="-1" role="dialog" aria-labelledby="monsterModal-'+modalCount+'" aria-hidden="true"> \
+                                        <div class="modal-dialog modal-lg" role="document"> \
+                                            <div class="modal-content"> \
+                                                <div class="modal-header"> \
+                                                    <h5 class="modal-title" id="exampleModalLabel">'+monsterData.name+'</h5> \
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> \
+                                                    <span aria-hidden="true">&times;</span> \
+                                                    </button> \
+                                                </div> \
+                                                <div class="modal-body"> \
+                                                    '+monsterData.size+' '+monsterData.type+', '+monsterData.alignment+'<br> \
+                                                    <b>Armor Class</b>: '+monsterData.armor_class+'<br> \
+                                                    <b>Hit Points</b>: '+monsterData.hit_points+' ('+monsterData.hit_dice+')<br> \
+                                                    <b>Speed</b>: '+monsterData.speed+' \
+                                                    <hr> \
+                                                    <div class="row"> \
+                                                        <div class="col-sm"> \
+                                                            <b>STR</b><br>'+monsterData.strength+' \
+                                                        </div> \
+                                                        <div class="col-sm"> \
+                                                            <b>DEX</b><br>'+monsterData.dexterity+' \
+                                                        </div> \
+                                                        <div class="col-sm"> \
+                                                            <b>CON</b><br>'+monsterData.constitution+' \
+                                                        </div> \
+                                                        <div class="col-sm"> \
+                                                            <b>INT</b><br>'+monsterData.intelligence+' \
+                                                        </div> \
+                                                        <div class="col-sm"> \
+                                                            <b>WIS</b><br>'+monsterData.wisdom+' \
+                                                        </div> \
+                                                        <div class="col-sm"> \
+                                                            <b>CHA</b><br>'+monsterData.charisma+' \
+                                                        </div> \
+                                                    </div> \
+                                                    <hr> \
+                                                </div> \
+                                            </div> \
+                                        </div> \
+                                    </div> \
+                                    <div class="modal fade monsterHpModal-'+modalCount+'" id="monsterHpModal-'+modalCount+'" tabindex="-1" role="dialog" aria-labelledby="monsterHp-'+modalCount+'" aria-hidden="true"> \
+                                        <div class="modal-dialog" role="document"> \
+                                            <div class="modal-content"> \
+                                                <div class="modal-header"> \
+                                                    <h5 class="modal-title" id="exampleModalLabel">Hit Points</h5> \
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> \
+                                                    <span aria-hidden="true">&times;</span> \
+                                                    </button> \
+                                                </div> \
+                                                <div class="modal-body"> \
+                                                    <div class="row"> \
+                                                        <div class="col-sm"> \
+                                                            <div class="form-group"> \
+                                                                <label for="monsterHpAtual">HP Atual</label> \
+                                                                <input type="number" name="monsterHpAtual" class="form-control monsterHp" value="'+monsterData.hit_points+'"> \
+                                                            </div> \
+                                                        </div> \
+                                                        <div class="col-sm"> \
+                                                            <div class="form-group"> \
+                                                                <label for="monsterHpTemp">HP Temporário</label> \
+                                                                <input type="number" name="monsterHpTemp" class="form-control monsterHpTemp" value="0"> \
+                                                            </div> \
+                                                        </div> \
+                                                        <div class="col-sm"> \
+                                                            <div class="form-group"> \
+                                                                <label for="monsterHpTotal">HP Padrão</label> \
+                                                                <input type="number" name="monsterHpTotal" class="form-control monsterHpTotal" value="'+monsterData.hit_points+'" disabled> \
+                                                            </div> \
+                                                        </div> \
+                                                    </div> \
+                                                    <div class="form-group"> \
+                                                        <div class="form-check"> \
+                                                            <input class="dano-cura" type="radio" name="dano-cura" id="dano-cura1" value="dano" checked> \
+                                                            <label class="form-check-label" for="dano-cura1"> \
+                                                                Dano \
+                                                            </label> \
+                                                        </div> \
+                                                        <div class="form-check"> \
+                                                            <input class="dano-cura" type="radio" name="dano-cura" id="dano-cura2" value="cura"> \
+                                                            <label class="form-check-label" for="dano-cura2"> \
+                                                                Cura \
+                                                            </label> \
+                                                        </div> \
+                                                        <label for="monsterHpAtuali">Quantidade p/ atualizar</label> \
+                                                        <div class="row"> \
+                                                            <div class="col-sm-4"> \
+                                                                <input type="number" name="monsterHpAtuali" class="form-control monsterHpAtuali" value="0"> \
+                                                            </div> \
+                                                            <div class="col-sm-8" style="text-align: right"> \
+                                                                <button class="btn btn-success saveMonster" mRow="'+modalCount+'" data-dismiss="modal">Salvar</button> \
+                                                            </div> \
+                                                        </div> \
+                                                    </div> \
+                                                </div> \
+                                            </div> \
+                                        </div> \
+                                    </div>');
+                                modalCount++;
+
+                            });
 
                             $(document).on('click', '.remover', function () {
                                 p.row($(this).parents('tr')).remove().draw();
